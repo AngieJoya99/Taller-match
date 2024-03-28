@@ -40,7 +40,10 @@ package object Newton{
     def derivar (f:Expr, a:Atomo): Expr = {
         f match{
             case Numero(n) => Numero(0)
-            case Atomo (x) => Numero(1)
+            case Atomo (x) => {
+                if (Atomo(x) == a) (Numero(1))
+                else (Numero(0))
+            }
             case Suma (e1, e2) => Suma(derivar(e1, a) , derivar(e2, a))
             case Prod (e1, e2) => Suma(Prod(derivar(e1, a),e2) , Prod(derivar(e2, a),e1))
             case Resta (e1, e2) => Resta(derivar(e1, a) , derivar(e2, a))
