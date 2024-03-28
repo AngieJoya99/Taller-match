@@ -45,7 +45,7 @@ package object Newton{
                 else (Numero(0))
             }
             case Suma (e1, e2) => Suma(derivar(e1, a) , derivar(e2, a))
-            case Prod (e1, e2) => Suma(Prod(derivar(e1, a),e2) , Prod(derivar(e2, a),e1))
+            case Prod (e1, e2) => Suma(Prod(derivar(e1, a),e2) , Prod(e1,derivar(e2, a)))
             case Resta (e1, e2) => Resta(derivar(e1, a) , derivar(e2, a))
             case Div (e1, e2) => Div((Resta(Prod(derivar(e1, a),e2) , Prod(derivar(e2, a),e1))),Expo(e2,Numero(2)))
             case Expo (e1, e2) => Prod(Expo(e1,e2),Suma(Div(Prod(derivar(e1,a),e2),e1),Prod(derivar(e2,a),Logaritmo(e1))))
@@ -54,27 +54,70 @@ package object Newton{
     }
 
     /**
-      * 
-      *
-      * @param f
-      * @param a
-      * @param v
-      * @return
+      * Sea la función f que depende de la variable a, calcula el resultado de
+      * reemplazar el valor v en todas las instancias de a
+      * @param f Función a Evaluar
+      * @param a Variable de la función
+      * @param v Valor a reemplazar
+      * @return Resultado de evaluar f(v)
       */
     def evaluar (f:Expr, a:Atomo, v:Double): Double ={
-        val a = 5
-        a
+        f match{
+            case Numero(n) => n
+            case Atomo (x) => v
+            case Suma (e1, e2) => evaluar(e1,a,v) + evaluar(e2,a,v)
+            case Prod (e1, e2) => evaluar(e1,a,v) * evaluar(e2,a,v)
+            case Resta (e1, e2) => evaluar(e1,a,v) - evaluar(e2,a,v)
+            case Div (e1, e2) => evaluar(e1,a,v) / evaluar(e2,a,v)
+            case Expo (e1, e2) => math.pow(evaluar(e1,a,v) , evaluar(e2,a,v))
+            case Logaritmo (e1) => math.log(evaluar(e1,a,v))
+        }
     }
 
     /**
-      * 
-      *
-      * @param f
-      * @return
+      * Elimina unos y ceros innecesarios de una expresión f
+      * @param f Función a limpiar
+      * @return Expresión de f sin 1 ni 0 innecesarios
       */
     def limpiar (f:Expr): Expr = {
-        val a = Numero(5)
-        a
+        //La última suma no funciona
+        f match{
+            case Numero(n) => Numero(n)
+            case Atomo (x) => Atomo(x)
+            case (Suma(e1, e2)) =>{
+                if ((e1 == Numero(0))&&(e2 == Numero(0))) (Numero(0))
+                else if (e2 == Numero(0)) (limpiar(e1))
+                else if (e1 == Numero(0)) (limpiar(e2))
+                else (Suma(limpiar(e1),limpiar(e2)))
+            }
+            case (Prod(e1, e2)) =>{
+                if ((e1 == Numero(0))||(e2 == Numero(0))) (Numero(0))
+                else if (e2 == Numero(1)) (limpiar(e1))
+                else if (e1 == Numero(1)) (limpiar(e2))
+                else (Prod(limpiar(e1), limpiar(e2)))
+            }
+            case Resta (e1, e2) =>{
+                if ((e1 == Numero(0))&&(e2 == Numero(0))) (Numero(0))
+                else if (e2 == Numero(0)) (limpiar(e1))
+                else if (e1 == Numero(0)) (limpiar(e2))
+                else (Resta(limpiar(e1), limpiar(e2)))
+            }
+            case Div (e1, e2) => {
+                if (e2 == Numero(1)) (limpiar(e1))
+                else (Div(limpiar(e1),limpiar(e2)))
+            }
+            case Expo (e1, e2) =>{
+                if (e2 == Numero(0)) (Numero(1))
+                else if (e2 == Numero(1)) (limpiar(e1))
+                else (Expo(limpiar(e1),limpiar(e2)))
+            }
+            
+            case Logaritmo (e1) => {
+                if (e1 == Numero(1)) (Numero(0))
+                else(Logaritmo(limpiar(e1)))
+            }
+            
+        }
     }
 
     /**
