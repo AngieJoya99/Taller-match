@@ -5,7 +5,7 @@ package object Newton{
     case class Numero (d:Double) extends Expr
     case class Atomo (x:Char) extends Expr
     case class Suma (e1:Expr, e2:Expr) extends Expr
-    case class Prod () extends Expr
+    case class Prod (e1:Expr, e2:Expr) extends Expr
     case class Resta (e1:Expr, e2:Expr) extends Expr
     case class Div (e1:Expr, e2:Expr) extends Expr
     case class Expo (e1:Expr, e2:Expr) extends Expr
@@ -18,20 +18,36 @@ package object Newton{
       * @return Cadena con definición simbólica
       */
     def mostrar (e:Expr):String = {
-        val a = "retorno"
-        a
+        e match{
+            case Numero(n) => n.toString()
+            case Atomo (x) => x.toString()
+            case Suma (e1, e2) => "(" + mostrar(e1) + " + " + mostrar(e2) + ")"
+            case Prod (e1, e2) => "(" + mostrar(e1) + " * " + mostrar(e2) + ")"
+            case Resta (e1, e2) => "(" + mostrar(e1) + " - " + mostrar(e2) + ")"
+            case Div (e1, e2) => "(" + mostrar(e1) + " / " + mostrar(e2) + ")"
+            case Expo (e1, e2) => "(" + mostrar(e1) + " ^ " + mostrar(e2) + ")"
+            case Logaritmo (e1) => "(Ln (" + mostrar(e1) + "))"
+        }
     }
 
     /**
-      * 
-      *
-      * @param f
-      * @param a
-      * @return
+      * Dadas una función f y una variable a, muestra una cadena de texto
+      * con la expresión correspondiente a la derivada de f respecto a a
+      * @param f Función a derivar
+      * @param a Variable de la función
+      * @return Derivada de f respecto a 'a'
       */
     def derivar (f:Expr, a:Atomo): Expr = {
-        val a = Numero(5)
-        a
+        f match{
+            case Numero(n) => Numero(0)
+            case Atomo (x) => Numero(1)
+            case Suma (e1, e2) => Suma(derivar(e1, a) , derivar(e2, a))
+            case Prod (e1, e2) => Suma(Prod(derivar(e1, a),e2) , Prod(derivar(e2, a),e1))
+            case Resta (e1, e2) => Resta(derivar(e1, a) , derivar(e2, a))
+            case Div (e1, e2) => Div((Resta(Prod(derivar(e1, a),e2) , Prod(derivar(e2, a),e1))),Expo(e2,Numero(2)))
+            case Expo (e1, e2) => Prod(Expo(e1,e2),Suma(Div(Prod(derivar(e1,a),e2),e1),Prod(derivar(e2,a),Logaritmo(e1))))
+            case Logaritmo (e1) => Div(derivar(e1, a),e1)
+        }
     }
 
     /**
