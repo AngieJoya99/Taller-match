@@ -12,10 +12,10 @@ package object Newton{
     case class Logaritmo (e1:Expr) extends Expr
 
     /**
-      * 
-      *
-      * @param e
-      * @return
+      * Convierte una expresión e en una cadena de texto con la definición simbólica
+      * de esta, sin ambigüedades
+      * @param e Expresión a mostrar
+      * @return Cadena con definición simbólica
       */
     def mostrar (e:Expr):String = {
         val a = "retorno"
