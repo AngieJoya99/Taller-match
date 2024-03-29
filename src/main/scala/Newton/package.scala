@@ -80,52 +80,62 @@ package object Newton{
       * @return Expresión de f sin 1 ni 0 innecesarios
       */
     def limpiar (f:Expr): Expr = {
-        //La última suma no funciona
         f match{
             case Numero(n) => Numero(n)
             case Atomo (x) => Atomo(x)
             case (Suma(e1, e2)) =>{
-                if ((limpiar(e1) == Numero(0))&&(limpiar(e2) == Numero(0))) (Numero(0))
-                else if (limpiar(e2) == Numero(0)) (limpiar(e1))
-                else if (limpiar(e1) == Numero(0)) (limpiar(e2))
-                else (Suma(limpiar(e1),limpiar(e2)))
+                (limpiar(e1),limpiar(e2)) match{
+                    case (_, Numero(0)) => limpiar(e1)
+                    case (Numero(0), _) => limpiar(e2)
+                    case _ => Suma(limpiar(e1),limpiar(e2))
+                }
             }
             case (Prod(e1, e2)) =>{
-                if ((limpiar(e1) == Numero(0))||(limpiar(e2) == Numero(0))) (Numero(0))
-                else if (limpiar(e2) == Numero(1)) (limpiar(e1))
-                else if (limpiar(e1) == Numero(1)) (limpiar(e2))
-                else (Prod(limpiar(e1), limpiar(e2)))
+                (limpiar(e1),limpiar(e2)) match{
+                    case (_, Numero(0)) => Numero(0)
+                    case (Numero(0), _) => Numero(0)
+                    case (_, Numero(1)) => limpiar(e1)
+                    case (Numero(1), _) => limpiar(e2)
+                    case _ => Prod(limpiar(e1),limpiar(e2))
+                }
             }
             case Resta (e1, e2) =>{
-                if ((limpiar(e1) == Numero(0))&&(limpiar(e2) == Numero(0))) (Numero(0))
-                else if (limpiar(e2) == Numero(0)) (limpiar(e1))
-                else if (limpiar(e1) == Numero(0)) (limpiar(e2))
-                else (Resta(limpiar(e1), limpiar(e2)))
+                (limpiar(e1),limpiar(e2)) match{
+                    case (_, Numero(0)) => limpiar(e1)
+                    case (Numero(0), _) => Prod(limpiar(e2),Numero(-1))
+                    case _ => Resta(limpiar(e1),limpiar(e2))
+                }
             }
             case Div (e1, e2) => {
-                if (limpiar(e2) == Numero(1)) (limpiar(e1))
-                else (Div(limpiar(e1),limpiar(e2)))
+                (limpiar(e1),limpiar(e2)) match{
+                    case (_, Numero(1)) => limpiar(e1)
+                    case (Numero(0), _) => Numero(0)
+                    case _ => Div(limpiar(e1),limpiar(e2))
+                }
             }
             case Expo (e1, e2) =>{
-                if (limpiar(e2) == Numero(0)) (Numero(1))
-                else if (limpiar(e2) == Numero(1)) (limpiar(e1))
-                else (Expo(limpiar(e1),limpiar(e2)))
+                (limpiar(e1),limpiar(e2)) match{
+                    case (_, Numero(0)) => Numero(1)
+                    case (_, Numero(1)) => limpiar(e1)
+                    case _ => Expo(limpiar(e1),limpiar(e2))
+                }
             }
-            
             case Logaritmo (e1) => {
-                if (limpiar(e1) == Numero(1)) (Numero(0))
-                else(Logaritmo(limpiar(e1)))
+                (limpiar(e1)) match{
+                    case (Numero(1)) => Numero(0)
+                    case _ =>  Logaritmo(limpiar(e1))
+                }
             }
         }
     }
 
-    /**
-      * 
-      *
-      * @param f
-      * @param a
-      * @param x0
-      * @param ba
+    /** Calcula la raíz de la función f con variable a usando el método
+      * de Newton, donde x0 es el candidato a raíz y ba es una función
+      * que determina la aproximación de la estimación
+      * @param f Función a hallar raíz
+      * @param a Variable de la función
+      * @param x0 Candidato a raiz de f
+      * @param ba Función que retorna true si x0 está suficientemente cerca de 0, false si no
       * @return
       */
     def raizNewton(f:Expr, a:Atomo, x0:Double, ba:(Expr, Atomo, Double) => Boolean): Double = {
@@ -133,6 +143,3 @@ package object Newton{
         a
     }
 }
-
-
-
