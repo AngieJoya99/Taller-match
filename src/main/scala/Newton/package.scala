@@ -85,38 +85,37 @@ package object Newton{
             case Numero(n) => Numero(n)
             case Atomo (x) => Atomo(x)
             case (Suma(e1, e2)) =>{
-                if ((e1 == Numero(0))&&(e2 == Numero(0))) (Numero(0))
-                else if (e2 == Numero(0)) (limpiar(e1))
-                else if (e1 == Numero(0)) (limpiar(e2))
+                if ((limpiar(e1) == Numero(0))&&(limpiar(e2) == Numero(0))) (Numero(0))
+                else if (limpiar(e2) == Numero(0)) (limpiar(e1))
+                else if (limpiar(e1) == Numero(0)) (limpiar(e2))
                 else (Suma(limpiar(e1),limpiar(e2)))
             }
             case (Prod(e1, e2)) =>{
-                if ((e1 == Numero(0))||(e2 == Numero(0))) (Numero(0))
-                else if (e2 == Numero(1)) (limpiar(e1))
-                else if (e1 == Numero(1)) (limpiar(e2))
+                if ((limpiar(e1) == Numero(0))||(limpiar(e2) == Numero(0))) (Numero(0))
+                else if (limpiar(e2) == Numero(1)) (limpiar(e1))
+                else if (limpiar(e1) == Numero(1)) (limpiar(e2))
                 else (Prod(limpiar(e1), limpiar(e2)))
             }
             case Resta (e1, e2) =>{
-                if ((e1 == Numero(0))&&(e2 == Numero(0))) (Numero(0))
-                else if (e2 == Numero(0)) (limpiar(e1))
-                else if (e1 == Numero(0)) (limpiar(e2))
+                if ((limpiar(e1) == Numero(0))&&(limpiar(e2) == Numero(0))) (Numero(0))
+                else if (limpiar(e2) == Numero(0)) (limpiar(e1))
+                else if (limpiar(e1) == Numero(0)) (limpiar(e2))
                 else (Resta(limpiar(e1), limpiar(e2)))
             }
             case Div (e1, e2) => {
-                if (e2 == Numero(1)) (limpiar(e1))
+                if (limpiar(e2) == Numero(1)) (limpiar(e1))
                 else (Div(limpiar(e1),limpiar(e2)))
             }
             case Expo (e1, e2) =>{
-                if (e2 == Numero(0)) (Numero(1))
-                else if (e2 == Numero(1)) (limpiar(e1))
+                if (limpiar(e2) == Numero(0)) (Numero(1))
+                else if (limpiar(e2) == Numero(1)) (limpiar(e1))
                 else (Expo(limpiar(e1),limpiar(e2)))
             }
             
             case Logaritmo (e1) => {
-                if (e1 == Numero(1)) (Numero(0))
+                if (limpiar(e1) == Numero(1)) (Numero(0))
                 else(Logaritmo(limpiar(e1)))
             }
-            
         }
     }
 
