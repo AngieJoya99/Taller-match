@@ -139,6 +139,11 @@ package object Newton{
       * @return
       */
     def raizNewton(f:Expr, a:Atomo, x0:Double, ba:(Expr, Atomo, Double) => Boolean): Double = {
+        def probar (f:Expr, a:Atomo, x0:Double): Double ={
+            val evalFunc = evaluar(f,a,x0)
+            val evalDer = evaluar(derivar(f,a),a,x0)
+            x0 -(evalFunc/evalDer)
+        }
         val a = 5
         a
     }
