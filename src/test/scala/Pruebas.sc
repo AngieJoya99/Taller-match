@@ -49,3 +49,14 @@ limpiar(Suma(Prod(Atomo('x'),Numero(1)),Numero(0)))
 limpiar(derivar(Suma(Prod(Atomo('x'),Numero(1)),Numero(0)),Atomo('x')))
 limpiar(Prod(Suma(Numero(8.0),Numero(0)),Prod(Atomo('x'),Numero(1))))
 limpiar(Logaritmo(Numero(1)))
+
+def buenaAprox ( f : Expr , a :Atomo , d : Double ) : Boolean = {
+    evaluar ( f , a , d) < 0.001
+}
+
+val e1= Resta (Prod(Atomo( 'x' ) ,Atomo( 'x' ) ) , Numero ( 2.0 ) )
+val e2= Resta (Prod(Atomo( 'x' ) ,Atomo( 'x' ) ) , Numero ( 4.0 ) )
+val e3 = Suma(Resta (Prod(Atomo( 'x' ) ,Atomo( 'x' ) ) , Numero ( 4.0 ) ) , Prod(Numero ( 3.0 ) ,Atomo( 'x' ) ) )
+raizNewton ( e1 , Atomo( 'x' ) , 2.0 , buenaAprox )
+raizNewton ( e2 , Atomo( 'x') , 2.0 , buenaAprox )
+raizNewton ( e3 , Atomo( 'x' ) , 2.0 , buenaAprox )
