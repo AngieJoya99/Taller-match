@@ -140,19 +140,14 @@ package object Newton{
       */
     def raizNewton(f:Expr, a:Atomo, x0:Double, ba:(Expr, Atomo, Double) => Boolean): Double = {
         def probar (x:Double): Double = {
-            x -(evaluar(f,a,x)/evaluar(derivar(f,a),a,x))
+            if(evaluar(derivar(f,a),a,x) == 0)(throw new Error("La derivada es cero"))
+            else (x -(evaluar(f,a,x)/evaluar(derivar(f,a),a,x)))
         }
         def raiz (x:Double): Double = {
-            ba(f,a,x) match{
-                case true => x
-                case false => raiz(probar(x))
-            }          
+            if (ba(f,a,x)) (x)
+            else (raiz(probar(x)))        
         }
         val inicial = probar(x0)
-        /*ba(f,a,x0) match{
-            case true => x0
-            case false => raiz(inicial)
-        }*/
         raiz(inicial)     
     }
 }

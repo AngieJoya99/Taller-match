@@ -2,8 +2,6 @@
 Emily Nuñez - 2240156*/
 
 import Newton._
-import Newton.limpiar
-import Newton.derivar
 
 val expr1 = Suma(Atomo('x'), Numero(2))
 val expr2 = Prod(Atomo('x'), Atomo('x'))
@@ -57,6 +55,11 @@ def buenaAprox ( f : Expr , a :Atomo , d : Double ) : Boolean = {
 val e1= Resta (Prod(Atomo( 'x' ) ,Atomo( 'x' ) ) , Numero ( 2.0 ) )
 val e2= Resta (Prod(Atomo( 'x' ) ,Atomo( 'x' ) ) , Numero ( 4.0 ) )
 val e3 = Suma(Resta (Prod(Atomo( 'x' ) ,Atomo( 'x' ) ) , Numero ( 4.0 ) ) , Prod(Numero ( 3.0 ) ,Atomo( 'x' ) ) )
+val e4 = Numero(0)
+val e5 = Atomo( 'y' )
+
 raizNewton ( e1 , Atomo( 'x' ) , 2.0 , buenaAprox )
 raizNewton ( e2 , Atomo( 'x') , 2.0 , buenaAprox )
 raizNewton ( e3 , Atomo( 'x' ) , 2.0 , buenaAprox )
+raizNewton ( e4 , Atomo( 'x' ) , 2.0 , buenaAprox )
+raizNewton ( e5 , Atomo( 'x' ) , 2.0 , buenaAprox )
