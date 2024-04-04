@@ -139,32 +139,20 @@ package object Newton{
       * @return Valor de a que al reemplazar en f se acerca lo suficiente a 0
       */
     def raizNewton(f:Expr, a:Atomo, x0:Double, ba:(Expr, Atomo, Double) => Boolean): Double = {
-        def probar (f:Expr, a:Atomo, x:Double, ba:(Expr, Atomo, Double) => Boolean): Double = {
+        def probar (x:Double): Double = {
             x -(evaluar(f,a,x)/evaluar(derivar(f,a),a,x))
         }
-        val inicial = probar(f,a,x0,ba)
-        def raiz (f:Expr, a:Atomo, x:Double, ba:(Expr, Atomo, Double) => Boolean): Double = {
+        def raiz (x:Double): Double = {
             ba(f,a,x) match{
                 case true => x
-                case false => raiz(f,a,probar(f,a,x,ba),ba)
+                case false => raiz(probar(x))
             }          
         }
-        ba(f,a,x0) match{
+        val inicial = probar(x0)
+        /*ba(f,a,x0) match{
             case true => x0
-            case false => raiz(f,a,inicial,ba)
-        }     
-    }
-
-    /** Calcula la raíz de la función f con variable a usando el método
-      * de Newton, donde x0 es el candidato a raíz y ba es una función
-      * que determina la aproximación de la estimación
-      * @param f Función a hallar raíz
-      * @param a Variable de la función
-      * @param x0 Candidato a raiz de f
-      * @param ba Función que retorna true si x0 está suficientemente cerca de 0, false si no
-      * @return Valor de a que al reemplazar en f se acerca lo suficiente a 0
-      */
-    def raizNewtonIter (f:Expr, a:Atomo, x0:Double, ba:(Expr, Atomo, Double) => Boolean): Double = {
-        x0
+            case false => raiz(inicial)
+        }*/
+        raiz(inicial)     
     }
 }
