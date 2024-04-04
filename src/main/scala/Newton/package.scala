@@ -139,15 +139,15 @@ package object Newton{
       * @return Valor de a que al reemplazar en f se acerca lo suficiente a 0
       */
     def raizNewton(f:Expr, a:Atomo, x0:Double, ba:(Expr, Atomo, Double) => Boolean): Double = {
-        def probar (x:Double): Double = {
+        def siguiente (x:Double): Double = {
             if(evaluar(derivar(f,a),a,x) == 0)(throw new Error("La derivada es cero"))
             else (x -(evaluar(f,a,x)/evaluar(derivar(f,a),a,x)))
         }
         def raiz (x:Double): Double = {
             if (ba(f,a,x)) (x)
-            else (raiz(probar(x)))        
+            else (raiz(siguiente(x)))        
         }
-        val inicial = probar(x0)
+        val inicial = siguiente(x0)
         raiz(inicial)     
     }
 }
