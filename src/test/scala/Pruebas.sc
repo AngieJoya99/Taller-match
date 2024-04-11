@@ -65,7 +65,7 @@ val e3 = Suma(Resta (Prod(Atomo( 'x' ) ,Atomo( 'x' ) ) , Numero ( 4.0 ) ) , Prod
 val e4 = Div(Expo(Numero(8.0),Atomo('y')),Suma(Logaritmo(Numero(1)),Numero(4)))
 val e5 = derivar(Prod(Resta(Numero(2),Numero(17.45)),Expo(Numero(14.0),Atomo('Y'))),Atomo('Y'))
 
-raizNewton ( e1 , Atomo( 'x' ) , 7.5 , muyBuenaAprox )
+raizNewton ( e1 , Atomo( 'x' ) , 2.0 , muyBuenaAprox )
 raizNewton ( e2 , Atomo( 'x') , 5.0 , buenaAprox )
 raizNewton ( e3 , Atomo( 'x' ) , 2.0 , buenaAprox )
 raizNewton ( e4 , Atomo( 'y' ) , 20.0 , muyBuenaAprox )
